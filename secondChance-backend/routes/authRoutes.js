@@ -32,13 +32,13 @@ router.post('/register', async (req, res) => {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       password: hash,
-      createdAt: new Date(),
+      createdAt: new Date()
     })
     // Task 6: Create JWT authentication if passwords match with user._id as payload
     const payload = {
       user: {
-        id: newUser.insertedId,
-      },
+        id: newUser.insertedId
+      }
     }
 
     const authtoken = jwt.sign(payload, JWT_SECRET)
@@ -61,7 +61,7 @@ router.post('/login', async (req, res) => {
     const theUser = await collection.findOne({ email: req.body.email })
     // Task 4: Check if the password matches the encrypted password and send appropriate message on mismatch
     if (theUser) {
-      let result = await bcryptjs.compare(req.body.password, theUser.password)
+      const result = await bcryptjs.compare(req.body.password, theUser.password)
       if (!result) {
         logger.error('Passwords do not match')
         return res.status(404).json({ error: 'Wrong pasword' })
@@ -70,10 +70,10 @@ router.post('/login', async (req, res) => {
       const userName = theUser.firstName
       const userEmail = theUser.email
       // Task 6: Create JWT authentication if passwords match with user._id as payload
-      let payload = {
+      const payload = {
         user: {
-          id: theUser._id.toString(),
-        },
+          id: theUser._id.toString()
+        }
       }
       const authtoken = jwt.sign(payload, JWT_SECRET)
       logger.info('User logged in successfully')
@@ -87,7 +87,6 @@ router.post('/login', async (req, res) => {
   } catch (e) {
     logger.error(e)
     return res.status(500).json({ error: 'Internal server error', details: e.message })
-
   }
 })
 
@@ -106,7 +105,7 @@ router.put('/update', async (req, res) => {
       logger.error('Email not found in the request headers')
       return res.status(400).json({
         error:
-          '\Email not found in the request headers'
+          'Email not found in the request headers'
       })
     }
     // Task 4: Connect to MongoDB
